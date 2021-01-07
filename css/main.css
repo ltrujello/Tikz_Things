@@ -1,0 +1,33 @@
+body{
+    margin: 0;
+    font-family: "Computer Modern Serif", serif;
+    font-size: 12px;
+}
+
+.description{
+    text-align: center;
+    font-size: 20px;
+    border: 1px solid #EBEBEB;
+    margin: 10px auto;
+    text-align: center;
+    width: 100%;
+}
+.sub_description{
+    text-align: center;
+    font-size: 14px;
+    margin: 10px auto;
+    text-align: center;
+    width: 100%;
+}
+
+.maindiv{
+    margin: auto;
+    width: 90%;
+}
+  
+
+.axis path, .axis line {
+    fill: none;
+    stroke: black;
+    shape-rendering: crispEdges;  /* Round any decimal pixels so it'll render nicely */
+}
