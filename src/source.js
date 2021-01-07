@@ -1,7 +1,7 @@
-let w = window.innerWidth,
-h = window.innerHeight,
-margin = { top: 100, right: 100, bottom: 100, left: 100 },
-radius = 3;
+let w = window.innerWidth;
+let h = window.innerHeight;
+let margin = { top: 100, right: 100, bottom: 100, left: 100 };
+let radius = 3;
 
 let svg = d3.select("#canvas").append("svg").attr({
     width: 0.8*w,
@@ -9,17 +9,18 @@ let svg = d3.select("#canvas").append("svg").attr({
 });
 
 let points = [
-    { x: 0, y: 0 }
 ];
 
 // We're passing in a function in d3.max to tell it what we're maxing (x value)
 let xScale = d3.scale.linear()
-.domain([0, d3.max(points, function (d) { return d.x + 100; })])
+// .domain([0, d3.max(points, function (d) { return d.x + 100; })])
+.domain([0, 100])
 .range([margin.left, w - margin.right]);  // Set margins for x specific
 
 // We're passing in a function in d3.max to tell it what we're maxing (y value)
 let yScale = d3.scale.linear()
-.domain([0, d3.max(points, function (d) { return d.y + 100; })])
+// .domain([0, d3.max(points, function (d) { return d.y + 100; })])
+.domain([0, 100])
 .range([h - margin.bottom, margin.top]);  // Set margins for y specific
 
 // Add a X and Y Axis (Note: orient means the direction that ticks go, not position)
@@ -43,14 +44,6 @@ svg.append("g").attr({
     "class": "axis",
     transform: "translate(" + [margin.left, 0] + ")"
 }).call(yAxis);  // Call the yAxis function on the group
-
-svg.selectAll("circle")
-.data(points)
-.enter()
-.append("circle")
-.attr(circleAttrs)  // Get attributes from circleAttrs let
-.on("mouseover", handleMouseOver)
-.on("mouseout", handleMouseOut);
 
 // On Click, we want to add data to the array and chart
 svg.on("click", function() {
@@ -102,7 +95,7 @@ function handleMouseOver(d, i) {  // Add interactivity
 }
 
 // This function is ridiculous 
-// returns -1 if not found, otherwise it gives the index/
+// returns -1 if not found, otherwise it gives the index
 function inArray(point){
     found = -1
     let x = Number(point.x)
