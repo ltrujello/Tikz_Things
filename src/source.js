@@ -1,6 +1,6 @@
 let w = window.innerWidth;
 let h = window.innerHeight;
-let margin = { top: 100, right: 100, bottom: 100, left: 100 };
+let margin = { top: 10, right: 100, bottom: 100, left: 100 };
 let radius = 3;
 
 let svg = d3.select("#canvas").append("svg").attr({
@@ -8,18 +8,16 @@ let svg = d3.select("#canvas").append("svg").attr({
     height: 0.9*h
 });
 
-let points = [
-];
+let points = [];
 
 // We're passing in a function in d3.max to tell it what we're maxing (x value)
 let xScale = d3.scale.linear()
-// .domain([0, d3.max(points, function (d) { return d.x + 100; })])
 .domain([0, 100])
 .range([margin.left, w - margin.right]);  // Set margins for x specific
+// .range([margin.left, w - margin.right]);  // Set margins for x specific
 
 // We're passing in a function in d3.max to tell it what we're maxing (y value)
 let yScale = d3.scale.linear()
-// .domain([0, d3.max(points, function (d) { return d.y + 100; })])
 .domain([0, 100])
 .range([h - margin.bottom, margin.top]);  // Set margins for y specific
 
@@ -28,15 +26,15 @@ let xAxis = d3.svg.axis().scale(xScale).orient("bottom");
 let yAxis = d3.svg.axis().scale(yScale).orient("left");
 
 let circleAttrs = {
-    cx: function(d) { return xScale(d.x); },
-    cy: function(d) { return yScale(d.y); },
+    cx: (d) => xScale(d.x),
+    cy: (d) => yScale(d.y),
     r: radius
 };
 
 // Adds X-Axis as a 'g' element
 svg.append("g").attr({
     "class": "axis",  // Give class so we can style it
-    transform: "translate(" + [0, h - margin.top] + ")"  // Translate just moves it down into position (or will be on top)
+    transform: "translate(" + [0, h - 100] + ")"  // Translate just moves it down into position (or will be on top)
 }).call(xAxis);  // Call the xAxis function on the group
 
 // Adds Y-Axis as a 'g' element
@@ -58,41 +56,23 @@ svg.on("click", function() {
     let newPt = inArray(newData);
 
     if (newPt != -1 ){// Remove element if we already have it 
-        console.log("fuck")
-        delete points[newPt]
+        points.splice(newPt, 1);
+        svg.selectAll("circle")[0][newPt].remove()
+        console.log(points)
+        d3.select("#t" + newData.x + "-" + newData.y + "-" + newPt).remove();  // Remove text location
     }
     else{
         points.push(newData);   // Push data to our array
-    }
-    
-    svg.selectAll("circle")  // For new circle, go through the update process
-    .data(points)
-    .enter()
-    .append("circle")
-    .attr(circleAttrs)  // Get attributes from circleAttrs let
-    .on("mouseover", handleMouseOver)
-    .on("mouseout", handleMouseOut);
+        svg.selectAll("circle")  // For new circle, go through the update process
+        .data(points)
+        .enter()
+        .append("circle")
+        .attr(circleAttrs)  // Get attributes from circleAttrs let   
+        .on("mouseover", handleMouseOver)
+        .on("mouseout", handleMouseOut); 
+    };
+
 })
-
-// Create Event Handlers for mouse
-function handleMouseOver(d, i) {  // Add interactivity
-
-    // Use D3 to select element, change color and size
-    d3.select(this).attr({
-    fill: "orange",
-    r: radius*2
-    });
-
-    // Specify where to put label of text
-    svg.append("text").attr({
-        id: "t" + d.x + "-" + d.y + "-" + i,  // Create an id for text so we can select it later for removing on mouseout
-        x: function() { return xScale(d.x) - 30; },
-        y: function() { return yScale(d.y) - 15; }
-    })
-    .text(function() {
-        return [d.x, d.y];  // Value of the text
-    });
-}
 
 // This function is ridiculous 
 // returns -1 if not found, otherwise it gives the index
@@ -108,6 +88,25 @@ function inArray(point){
         }
     )
     return found
+}
+
+// Create Event Handlers for mouse
+function handleMouseOver(d, i) {  // Add interactivity
+    // Use D3 to select element, change color and size
+    d3.select(this).attr({
+        fill: "orange",
+        r: radius*2
+    });
+
+    // Specify where to put label of text
+    svg.append("text").attr({
+        id: "t" + d.x + "-" + d.y + "-" + i,  // Create an id for text so we can select it later for removing on mouseout
+        x: () => xScale(d.x) - 30,
+        y: () => yScale(d.y) - 15
+    })
+    .text(function() {
+        return [d.x, d.y];  // Value of the text
+    });
 }
 
 function handleMouseOut(d, i) {
