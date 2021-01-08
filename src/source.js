@@ -1,30 +1,32 @@
-let w = window.innerWidth;
-let h = window.innerHeight;
-let margin = { top: 10, right: 100, bottom: 100, left: 100 };
-let radius = 3;
+// Screen parameters
+const w = window.innerWidth;
+const h = window.innerHeight;
+const margin = { top: 10, right: 100, bottom: 100, left: 100 };
+const radius = 3;
 
-let svg = d3.select("#canvas").append("svg").attr({
+// The canvas
+let svg = d3.select("#canvas").append("svg").attr({//"canvas" is our corresponding div id
     width: 0.8*w,
     height: 0.9*h
 });
 
+// Set of points on canvas
 let points = [];
 
-// We're passing in a function in d3.max to tell it what we're maxing (x value)
+// Setting axis scales
 let xScale = d3.scale.linear()
-.domain([0, 100])
-.range([margin.left, w - margin.right]);  // Set margins for x specific
-// .range([margin.left, w - margin.right]);  // Set margins for x specific
+.domain([0, 100]) // input values
+.range([margin.left, w - margin.right]); // range of input values
 
-// We're passing in a function in d3.max to tell it what we're maxing (y value)
 let yScale = d3.scale.linear()
 .domain([0, 100])
-.range([h - margin.bottom, margin.top]);  // Set margins for y specific
+.range([h - margin.bottom, margin.top]);  
 
-// Add a X and Y Axis (Note: orient means the direction that ticks go, not position)
+// Setting axis
 let xAxis = d3.svg.axis().scale(xScale).orient("bottom");
 let yAxis = d3.svg.axis().scale(yScale).orient("left");
 
+// Black circles marking data points
 let circleAttrs = {
     cx: (d) => xScale(d.x),
     cy: (d) => yScale(d.y),
@@ -33,41 +35,44 @@ let circleAttrs = {
 
 // Adds X-Axis as a 'g' element
 svg.append("g").attr({
-    "class": "axis",  // Give class so we can style it
-    transform: "translate(" + [0, h - 100] + ")"  // Translate just moves it down into position (or will be on top)
-}).call(xAxis);  // Call the xAxis function on the group
+    "class": "axis",  
+    transform: "translate(" + [0, h - 100] + ")"  
+}).call(xAxis);  
 
 // Adds Y-Axis as a 'g' element
 svg.append("g").attr({
     "class": "axis",
     transform: "translate(" + [margin.left, 0] + ")"
-}).call(yAxis);  // Call the yAxis function on the group
+}).call(yAxis);  
 
-// On Click, we want to add data to the array and chart
+/* On Click, we register a point. 
+    1. If the point is new (hasn't be clicked on before), we add it to the svg. 
+    2. Otherwise, we've clicked on it before. So we remove it from the svg. 
+*/
 svg.on("click", function() {
     let coords = d3.mouse(this);
-
-    // Normally we go from data to pixels, but here we're doing pixels to data
+    
+    // The clicked and registered point
     let newData= {
         x: Math.round( xScale.invert(coords[0])),  // Takes the pixel number to convert to number
         y: Math.round( yScale.invert(coords[1]))
     };
 
-    let newPt = inArray(newData);
+    let newPt = inArray(newData); //-1 if newData is a new point; otherwise, the index of newData is returned.
 
-    if (newPt != -1 ){// Remove element if we already have it 
+    if (newPt != -1 ){// If newData != -1, then we must remove it from out canvas
         points.splice(newPt, 1);
-        svg.selectAll("circle")[0][newPt].remove()
-        console.log(points)
+        // console.log(points)
         d3.select("#t" + newData.x + "-" + newData.y + "-" + newPt).remove();  // Remove text location
+        svg.selectAll("circle")[0][newPt].remove();
     }
-    else{
-        points.push(newData);   // Push data to our array
-        svg.selectAll("circle")  // For new circle, go through the update process
+    else{ //Otherwise, newData is in fact new, and we add it to our canvas
+        points.push(newData);   
+        svg.selectAll("circle") 
         .data(points)
         .enter()
         .append("circle")
-        .attr(circleAttrs)  // Get attributes from circleAttrs let   
+        .attr(circleAttrs) 
         .on("mouseover", handleMouseOver)
         .on("mouseout", handleMouseOut); 
     };
@@ -78,47 +83,42 @@ svg.on("click", function() {
 // returns -1 if not found, otherwise it gives the index
 function inArray(point){
     found = -1
-    let x = Number(point.x)
-    let y = Number(point.y)
-    Object.keys(points).forEach(function(key){
+    let x = Number(point.x);
+    let y = Number(point.y);
+    Object.keys(points).forEach((key) => {
             console.log(points[key].x == x & points[key].y == y)
             if(points[key].x == x & points[key].y == y){
-                found = key
+                found = key;
             }
         }
     )
     return found
 }
 
-// Create Event Handlers for mouse
-function handleMouseOver(d, i) {  // Add interactivity
-    // Use D3 to select element, change color and size
+// Event Handler for hovering
+function handleMouseOver(d, i) {  // Hovering changes color to orange, prompts textbox
     d3.select(this).attr({
         fill: "orange",
         r: radius*2
     });
 
-    // Specify where to put label of text
+    // The textbox
     svg.append("text").attr({
-        id: "t" + d.x + "-" + d.y + "-" + i,  // Create an id for text so we can select it later for removing on mouseout
+        id: "t" + d.x + "-" + d.y + "-" + i,  // Create a reference id
         x: () => xScale(d.x) - 30,
         y: () => yScale(d.y) - 15
     })
-    .text(function() {
-        return [d.x, d.y];  // Value of the text
-    });
+    .text(() => [d.x, d.y] // Textbox data
+    );
 }
 
+// Event Handler for moving mouse away
 function handleMouseOut(d, i) {
-    // Use D3 to select element, change color back to normal
     d3.select(this).attr({
         fill: "black",
         r: radius
     });
 
-    // Select text by id and then remove
-    d3.select("#t" + d.x + "-" + d.y + "-" + i).remove();  // Remove text location
+    // When we're done hovering, remove textbox
+    d3.select("#t" + d.x + "-" + d.y + "-" + i).remove(); 
 }
-
-
-(31, 38), (24, 62), (36, 78), (58, 70), (54, 36), (56, 8), (30, 10), (44, 11), (50, 90)
