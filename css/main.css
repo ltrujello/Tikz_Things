@@ -4,27 +4,58 @@ body{
     font-size: 12px;
 }
 
-.description{
-    text-align: center;
-    font-size: 20px;
-    border: 1px solid #EBEBEB;
-    margin: 10px auto;
+#text-heading{
     text-align: center;
     width: 100%;
-}
-.sub_description{
-    text-align: center;
-    font-size: 14px;
-    margin: 10px auto;
-    text-align: center;
-    width: 100%;
+    margin: 5px auto;
 }
 
-.maindiv{
-    margin: auto;
-    width: 90%;
+#description{
+    font-size: 20px;
+    border: 1px solid #EBEBEB;    
 }
-  
+#sub_description{
+    font-size: 14px;
+}
+
+#main-body-parent {
+    display: flex;
+    justify-content: space-around;
+}  
+
+#canvas{
+    width: 40%;
+    float: left;
+}
+
+.button-and-code{
+    /* border: 100px solid lightgray; */
+    background-color:red;
+    width: 40%;
+    float: right;
+    position: relative;
+}
+
+#main-button{
+    position: absolute;
+    bottom: 100%;
+    padding: 8px 16px;
+    text-align: center;
+    float:right;
+    margin: auto;
+}
+
+#code-output{
+    margin: auto;
+    float:left;
+    font-family: Consolas,"courier new";
+    background-color: #f1f1f1;
+    padding: 2px;
+    font-size: 105%;
+    width: 70%;
+    position: absolute;
+}
+
 
 .axis path, .axis line {
     fill: none;

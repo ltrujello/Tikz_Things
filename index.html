@@ -5,13 +5,32 @@
 </head>
 
 <body>
-    <p class = "description">Simple Canvas For Control Points
-        <p class = "sub_description">
-        TikZ's plot algorithm is nice, but it does not do well with numerous points.
-        The more points you add, the more weird the final image will look. </p>
-    </p>
+    <div id = "text-heading">
+        <p id = "description">Simple Canvas For Control Points
+            <p id = "sub_description">
+            TikZ's plot algorithm is nice, but it does not do well with numerous points.
+            The more points you add, the more weird the final image will look. </p>
+        </p>
+    </div>
+    <div class = "main-body-parent">
+        <div id = "canvas"></div>
     
-    <div class = "maindiv" id = "canvas"></div>
+        <div class = "button-and-code">
+            <button type="button" id = "main-button" >Output TikZ Code</button>
+        
+            <div id = "code-output">
+                <p> \usetikzlibrary{hobby} %excellent drawing algorithm<br>
+                    \begin{tikzpicture}<br>
+                    \draw plot[closed hobby] coordinates {<br>
+                        <span id = "coordinates"></span>
+                    };<br>
+                    \end{tikzpicture}
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    
 
     <script src="src/source.js"></script>
 </body>

@@ -1,13 +1,13 @@
 // Screen parameters
 const w = window.innerWidth;
 const h = window.innerHeight;
-const margin = { top: 10, right: 100, bottom: 100, left: 100 };
+const margin = { top: 5, right: 5, bottom: 100, left: 100 };
 const radius = 3;
 
 // The canvas
 let svg = d3.select("#canvas").append("svg").attr({//"canvas" is our corresponding div id
-    width: 0.8*w,
-    height: 0.9*h
+    width: 0.6*w,
+    height: 0.75*h
 });
 
 // Set of points on canvas
@@ -16,11 +16,12 @@ let points = [];
 // Setting axis scales
 let xScale = d3.scale.linear()
 .domain([0, 100]) // input values
-.range([margin.left, w - margin.right]); // range of input values
+.range([margin.left-100, w - margin.right-700]); // range of input values
 
 let yScale = d3.scale.linear()
 .domain([0, 100])
-.range([h - margin.bottom, margin.top]);  
+// .range([h - margin.bottom, margin.top]);  
+.range([h - margin.bottom, margin.top+150]);  
 
 // Setting axis
 let xAxis = d3.svg.axis().scale(xScale).orient("bottom");
@@ -36,16 +37,16 @@ let circleAttrs = {
 // Adds X-Axis as a 'g' element
 svg.append("g").attr({
     "class": "axis",  
-    transform: "translate(" + [0, h - 100] + ")"  
+    transform: "translate(" + [90, h - 280] + ")"  //[x, y] controls position 
 }).call(xAxis);  
 
 // Adds Y-Axis as a 'g' element
 svg.append("g").attr({
     "class": "axis",
-    transform: "translate(" + [margin.left, 0] + ")"
+    transform: "translate(" + [margin.left+10, -150] + ")"
 }).call(yAxis);  
 
-/* On Click, we register a point. 
+/* On Click, we register a point (which we call newData).
     1. If the point is new (hasn't be clicked on before), we add it to the svg. 
     2. Otherwise, we've clicked on it before. So we remove it from the svg. 
 */
@@ -78,6 +79,23 @@ svg.on("click", function() {
     };
 
 })
+/* On click for button
+*/
+document.getElementById("main-button").addEventListener("click", onClick);
+
+function onClick () {
+    let outputString = "";
+    Object.keys(points).forEach((key) => {
+        let xCoord = String(points[key].x/10);
+        let yCoord = String(points[key].y/10);
+        outputString += "(" + xCoord + ", " + yCoord + ") ";
+    })
+    if (coordinates)
+        {coordinates.innerHTML = outputString;}
+};
+
+
+
 
 // This function is ridiculous 
 // returns -1 if not found, otherwise it gives the index
