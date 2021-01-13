@@ -49,7 +49,7 @@ svg.append("g").attr({
 
 let points = []; // Initialize set of all points on canvas
 let on_figure = 0; // Keeps track of which figure the user is editing
-let figures = { // Figures maintains an object of arrays; each array is an (x,y) list of points which makes up a figure.
+let figures = { // "figures" maintains an object of arrays; each array is an (x,y) list of points which makes up a figure.
     fig_0 : []
 };
 
@@ -65,12 +65,13 @@ svg.on("click", function() {
     
     // Draw point on the canvas
     points.push(newData);
-    figures["fig_"+on_figure].push(newData); // adds point to the new figure
+    figures["fig_"+ String(on_figure)].push(newData); // adds point to the new figure
     svg.selectAll("circle") 
     .data(points)
     .enter()
     .append("circle")
-    .attr(circleAttrs) 
+    .attr(circleAttrs)
+    .attr({id: "c" + "-" + "fig_" + String(on_figure) + "-" + String(figures["fig_"+ String(on_figure)].length-1)})
     .on("mouseover", handleMouseOver)
     .on("mouseout", handleMouseOut); 
     // };
@@ -126,6 +127,19 @@ function newObject_onClick () {
     circleAttrs["fill"] = colors[on_figure]; // Give it a different color.
 };
 
+/* On click for Redraw Current Figure button
+*/
+document.getElementById("redraw-button").addEventListener("click", redrawObject_onClick);
+
+function redrawObject_onClick () {
+    tuples = figures["fig_" + String(on_figure)];
+    for(let i = 0; i < tuples.length; i++){
+        d3.select("#c" + "-" + "fig_" + String(on_figure) + "-" + i).remove(); //remove the circles
+        points.pop(); //remove the circle's data from "points"
+    }
+    figures["fig_" + String(on_figure)] = [];
+}
+
 // This function is ridiculous 
 // returns -1 if not found, otherwise it gives the index
 function inArray(point){
@@ -142,7 +156,7 @@ function inArray(point){
 }
 
 // Event Handler for hovering
-function handleMouseOver(d, i) {  // Hovering changes color to orange, prompts textbox
+function handleMouseOver(d, i) {  // Hovering enlarges the radius, prompts textbox
     d3.select(this).attr({
         r: radius*2
     });
