@@ -6,21 +6,17 @@ const radius = 3;
 
 // The canvas
 let svg = d3.select("#canvas").append("svg").attr({//"canvas" is our corresponding div id
-    width: 0.6*w,
+    width: 0.57*w,
     height: 0.75*h
 });
 
-// Set of points on canvas
-let points = [];
-
-// Setting axis scales
+// Setting x axis scale
 let xScale = d3.scale.linear()
 .domain([0, 100]) // input values
-.range([margin.left-100, w - margin.right-700]); // range of input values
+.range([margin.left-120, w - margin.right-800]); // [x,y] controls position of x-axis
 
 let yScale = d3.scale.linear()
 .domain([0, 100])
-// .range([h - margin.bottom, margin.top]);  
 .range([h - margin.bottom, margin.top+150]);  
 
 // Setting axis
@@ -31,20 +27,24 @@ let yAxis = d3.svg.axis().scale(yScale).orient("left");
 let circleAttrs = {
     cx: (d) => xScale(d.x),
     cy: (d) => yScale(d.y),
-    r: radius
+    r: radius,
+    fill : "green"
 };
 
 // Adds X-Axis as a 'g' element
 svg.append("g").attr({
     "class": "axis",  
-    transform: "translate(" + [90, h - 280] + ")"  //[x, y] controls position 
+    transform: "translate(" + [70, h - 280] + ")"  //[x, y] controls position 
 }).call(xAxis);  
 
 // Adds Y-Axis as a 'g' element
 svg.append("g").attr({
     "class": "axis",
-    transform: "translate(" + [margin.left+10, -150] + ")"
-}).call(yAxis);  
+    transform: "translate(" + [margin.left-20, -150] + ")"
+}).call(yAxis); 
+
+// Set of points on canvas
+let points = [];
 
 /* On Click, we register a point (which we call newData).
     1. If the point is new (hasn't be clicked on before), we add it to the svg. 
@@ -63,7 +63,6 @@ svg.on("click", function() {
 
     if (newPt != -1 ){// If newData != -1, then we must remove it from out canvas
         points.splice(newPt, 1);
-        // console.log(points)
         d3.select("#t" + newData.x + "-" + newData.y + "-" + newPt).remove();  // Remove text location
         svg.selectAll("circle")[0][newPt].remove();
     }
@@ -79,28 +78,36 @@ svg.on("click", function() {
     };
 
 })
-/* On click for button
+/* On click for Output TikZ Button
 */
-document.getElementById("main-button").addEventListener("click", onClick);
+document.getElementById("code-output-button").addEventListener("click", codeOutput_onClick);
 
-function onClick () {
-    let outputString = "";
+function codeOutput_onClick () {
+    let outputString = "\\draw plot[closed hobby] coordinates {<br>";
     Object.keys(points).forEach((key) => {
         let xCoord = String(points[key].x/10);
         let yCoord = String(points[key].y/10);
         outputString += "(" + xCoord + ", " + yCoord + ") ";
     })
-    if (coordinates)
-        {coordinates.innerHTML = outputString;}
+    outputString += "};<br>";
+    if (coordinates){
+        coordinates.innerHTML = outputString;
+    }
 };
 
+/* On click for New Object Button
+*/
+// document.getElementById("main-button").addEventListener("click", newObject_onClick);
 
+function newObject_onClick () {
+    svg.selectAll
+};
 
 
 // This function is ridiculous 
 // returns -1 if not found, otherwise it gives the index
 function inArray(point){
-    found = -1
+    found = -1;
     let x = Number(point.x);
     let y = Number(point.y);
     Object.keys(points).forEach((key) => {
@@ -110,7 +117,7 @@ function inArray(point){
             }
         }
     )
-    return found
+    return found;
 }
 
 // Event Handler for hovering
@@ -133,10 +140,9 @@ function handleMouseOver(d, i) {  // Hovering changes color to orange, prompts t
 // Event Handler for moving mouse away
 function handleMouseOut(d, i) {
     d3.select(this).attr({
-        fill: "black",
+        fill: d.fill,
         r: radius
     });
-
     // When we're done hovering, remove textbox
     d3.select("#t" + d.x + "-" + d.y + "-" + i).remove(); 
 }
