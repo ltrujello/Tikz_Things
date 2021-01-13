@@ -46,6 +46,12 @@ svg.append("g").attr({
 // Set of points on canvas
 let points = [];
 
+// Partitions the set of points
+let on_figure = 1;
+let figures = {
+    fig_1 : []
+};
+
 /* On Click, we register a point (which we call newData).
     1. If the point is new (hasn't be clicked on before), we add it to the svg. 
     2. Otherwise, we've clicked on it before. So we remove it from the svg. 
@@ -67,7 +73,8 @@ svg.on("click", function() {
         svg.selectAll("circle")[0][newPt].remove();
     }
     else{ //Otherwise, newData is in fact new, and we add it to our canvas
-        points.push(newData);   
+        points.push(newData);
+        figures["fig_"+on_figure].push(newData); // adds point to the new figure
         svg.selectAll("circle") 
         .data(points)
         .enter()
@@ -82,25 +89,36 @@ svg.on("click", function() {
 */
 document.getElementById("code-output-button").addEventListener("click", codeOutput_onClick);
 
+/* Function for "add figure" button*/
 function codeOutput_onClick () {
-    let outputString = "\\draw plot[closed hobby] coordinates {<br>";
-    Object.keys(points).forEach((key) => {
-        let xCoord = String(points[key].x/10);
-        let yCoord = String(points[key].y/10);
-        outputString += "(" + xCoord + ", " + yCoord + ") ";
+    /* To output the code, we 
+    1. Loop through "figures". This keeps track of all figures. Each figure is a list of points. 
+        Each figure needs its own separate "\draw plot ..." statement.
+    2. For each figure in "figures", we loop through its points. We organize the
+        point in its own "\draw plot ..." statement
+    3. Once we're done, we combine each "\draw plot ..." statement into a single string,
+        which we output for the reader.
+    */
+    let final_Output = ""; 
+    Object.keys(figures).forEach( (key) =>{ //Loop through each figure 
+        let outputString = "\\draw plot[closed hobby] coordinates {<br>"; // The beginning of a figure's TikZ command 
+        figures[key].forEach((tuple) => { // We loop through a figure's set of points
+            let xCoord = String(tuple.x/10);
+            let yCoord = String(tuple.y/10);
+            outputString += "(" + xCoord + ", " + yCoord + ") ";
+        })
+        outputString += "};<br>"; 
+        final_Output += outputString; // We add the final command statement to our overall eventual output
     })
-    outputString += "};<br>";
-    if (coordinates){
-        coordinates.innerHTML = outputString;
-    }
+    coordinates.innerHTML = final_Output; // The overall eventual output for the user
 };
 
 /* On click for New Object Button
 */
-// document.getElementById("main-button").addEventListener("click", newObject_onClick);
-
+document.getElementById("new-object-button").addEventListener("click", newObject_onClick);
 function newObject_onClick () {
-    svg.selectAll
+    on_figure += 1; //Increase this index, so we are now editing a new figure
+    figures["fig_" + on_figure] = [] //Initialize the array which will carry the (x,y) coordinates of the new figure
 };
 
 
