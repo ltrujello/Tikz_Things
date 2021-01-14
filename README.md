@@ -7,7 +7,7 @@ I made this because TikZ is powerful, but it (obviously) cannot be programmed to
 ### Dependencies 
 To use the generated code as-is, you need to add  `\usetikzlibrary{hobby}` to your header. Here, `hobby` invokes a nice drawing algorithm implemented by Andrew Stacey for TikZ.
 
-If, for some reason, you prefer using TikZ's default drawing algorithm (which is not very good in my opinion), simply replace each `\draw \plot[closed hobby]...` with `\draw plot[smooth cycle]...`. 
+If for some reason you prefer using TikZ's default drawing algorithm (which is not very good in my opinion), simply replace each `\draw \plot[closed hobby]...` with `\draw plot[smooth cycle]...`. 
 
 If your TeX engine cannot find the TikZ library `hobby`, then don't use it. However, that probably means your TeX distribution is outdated (and the good news is now you know!).  
 
@@ -23,7 +23,7 @@ Having a "white-board" like canvas that allows us to easily see, draw, remove, a
 
 Suppose I want to draw a random topological blob for some lecture notes. But I don't want to waste 10 minutes doing so. Using the canvas, I can just use 5 seconds to draw what kind of topological blob I'm thinking of. 
 
-<img src="https://ltrujello.github.io/Tikz_Things/example_one/ex_one.gif" height="300px" />
+<img src="https://github.com/ltrujello/Tikz_Things/blob/main/examples/example_one/ex_one.gif" height="300px" />
 
 I then ask to output the code. It tells me the code is:
 ```
@@ -36,18 +36,18 @@ I then ask to output the code. It tells me the code is:
 
 So then I style this by adding `\draw[fill = ProcessBlue!15]` (you need `\usepackage{xcolor}[dvipsnames]` for `ProcessBlue`) and compile to get:
 
-<img src="https://ltrujello.github.io/Tikz_Things/example_one/ex_one.png" height="300px" />
+<img src="https://github.com/ltrujello/Tikz_Things/blob/main/examples/example_one/ex_one.png" height="300px" />
 
 [Source is here.](https://github.com/ltrujello/Tikz_Things/tree/main/examples/example_one/ex_one_source.tex)
 
 ## Example Two
 You can also draw multiple blobs. Suppose I just drew this picture; it's an example of two members of an open cover having a nonempty intersection (ignore the bad hand writing). Now I want to include it in some TeX lecture notes.
 
-<img src="https://ltrujello.github.io/Tikz_Things/example_two/ex_two_handdrawn.jpg" height="300px" />
+<img src="https://github.com/ltrujello/Tikz_Things/blob/main/examples/example_two/ex_two_handdrawn.jpg" height="300px" />
 
 This picture consists of three components: the big blob and the two little blobs. I will need three different `\draw` statements. To achieve this, I first draw the larger blob. Then, I click "Get TikZ code," so that I may draw a new figure. I draw the leftmost blob. Once I'm done with that, I click "Get TikZ code" to start drawing the right most blob. 
 
-<img src="https://ltrujello.github.io/Tikz_Things/example_two/ex_two.gif" height="300px" />
+<img src="https://github.com/ltrujello/Tikz_Things/blob/main/examples/example_two/ex_two.gif" height="300px" />
 
 I ask for the code:
 ```
@@ -64,7 +64,7 @@ I ask for the code:
 
 I style it a little, and I get this:
 
-<img src="https://ltrujello.github.io/Tikz_Things/example_two/ex_two.png" height="300px" />
+<img src="https://github.com/ltrujello/Tikz_Things/blob/main/examples/example_two/ex_two.png" height="300px" />
 
 [Source is here.](https://github.com/ltrujello/Tikz_Things/tree/main/examples/example_two/ex_two_source.tex) 
 
@@ -73,7 +73,7 @@ I style it a little, and I get this:
 
 Suppose you want to talk about [Van Kampen's theorem](https://en.wikipedia.org/wiki/Seifert%E2%80%93van_Kampen_theorem), and you want to motivate the requirement that the two open sets in question have to have a nonempty, path-connected intersection. To do this, you need to draw two open sets which overlap in a way such that their intersection is not path-connected. Manually doing this would be annoying and time consuming, but it is very quick with this tool:
 
-<img src="https://ltrujello.github.io/Tikz_Things/example_three/ex_three.gif" height="300px" />
+<img src="https://github.com/ltrujello/Tikz_Things/blob/main/examples/example_three/ex_three.gif" height="300px" />
 
 We get the code: 
 
@@ -90,7 +90,7 @@ We get the code:
 
 and after a bit of styling gets us:
 
-<img src="https://ltrujello.github.io/Tikz_Things/example_three/ex_three.png" height="300px" />
+<img src="https://github.com/ltrujello/Tikz_Things/blob/main/examples/example_three/ex_three.png" height="300px" />
 
 [Source is here.](https://github.com/ltrujello/Tikz_Things/tree/main/examples/example_three/ex_three_source.tex)
  
@@ -101,7 +101,7 @@ Here is a fun application: Drawing an open cover of an arbitrary topological spa
 
 First, draw your desired blob that you'd like to cover. Then, draw as many open sets over it as you want. (There is no need to be accurate with the next blobs, because you will use the `\clip` tool from TikZ.) 
 
-<img src="https://ltrujello.github.io/Tikz_Things/example_four/ex_four.gif" height="300px" />
+<img src="https://github.com/ltrujello/Tikz_Things/blob/main/examples/example_four/ex_four.gif" height="300px" />
 
 Gather the code:
 ```
@@ -125,11 +125,11 @@ Gather the code:
 ```
 and now use `\clip`. This command basically says "Hey TikZ, do not draw anything that leaves this blob." The result is this:
 
-<img src="https://ltrujello.github.io/Tikz_Things/example_four/ex_four.png" height="300px" />
+<img src="https://github.com/ltrujello/Tikz_Things/blob/main/examples/example_four/ex_four.png" height="300px" />
 
 The result is a topological blob covered by open sets! By hand, this would take about 30 minutes.
 
-[Source is here.](https://github.com/ltrujello/Tikz_Things/tree/main/examples/example_three/ex_three_source.tex)
+[Source is here.](https://github.com/ltrujello/Tikz_Things/tree/main/examples/example_four/ex_four_source.tex)
 
 
 ## Further Work
