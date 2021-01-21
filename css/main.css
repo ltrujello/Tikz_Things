@@ -15,7 +15,7 @@ body{
     border: 1px solid #EBEBEB;    
 }
 #sub_description{
-    font-size: 14px;
+    font-size: 15px;
 }
 
 #main-body-parent {
@@ -29,26 +29,38 @@ body{
 }
 
 .button-and-code{
-    /* background-color:red; */
     width: 40%; 
     float: right;
     position: relative;
 }
 
-.buttons{
+.cmd-buttons{
     bottom: 100%;
     font-family: "Computer Modern Serif", serif;
-    padding: 4px 8  px;
+    padding: 2px 4 px;
+    text-align: center;
+    float:left;
+    margin: auto;
+    width: 20%;
+}
+
+.redraw-button{
+    bottom: 100%;
+    font-family: "Computer Modern Serif", serif;
+    padding: 4px 8 px;
     text-align: center;
     float:left;
     margin: auto;
     width: 30%;
 }
 
+.codefont{
+    font-family: Consolas, "courier new";
+}
+
 #code-output{
     margin: auto;
     float:left;
-    font-family: Consolas,"courier new";
     background-color: #f1f1f1;
     padding: 2px;
     font-size: 105%;

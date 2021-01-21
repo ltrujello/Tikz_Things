@@ -1,29 +1,33 @@
 <head>
-    <link rel = "stylesheet" href="css/font/cmun-serif.css"></link>
+    <link rel="stylesheet" href="css/font/cmun-serif.css"></link>
     <script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
     <link rel="stylesheet" href="css/main.css">
 </head>
 
 <body>
-    <div id = "text-heading">
-        <p id = "description">Simple Canvas For Control Points
-            <p id = "sub_description">
-            TikZ's plot algorithm is nice, but it does not do well with numerous points.
-            The more points you add, the more weird the final image will look. </p>
+    <div id="text-heading">
+        <p id="description">Simple Canvas For Control Points
+            <p id="sub_description">
+            Before you can draw, you need to select a code statement.
+            Select "add <span class="codefont">\draw</span>" to create a TikZ <span class="codefont">\draw</span> statement. "add <span class="codefont">\node</span>" works 
+            similarly.
+            </p>
         </p>
     </div>
 
-    <div class = "main-body-parent">
-        <div id = "canvas"></div>
-        <div class = "button-and-code">
-            <div width = 100%>
-                <button type="button" class = "buttons" id = "new-object-button" >Get TikZ Code</button>
-                <button type="button" class = "buttons" id = "redraw-button" >Redraw Current Figure</button>
+    <div class="main-body-parent">
+        <div id="canvas"></div>
+        <div class="button-and-code">
+            <div width=100%>
+                
+                <button type="button" class="cmd-buttons" id="new-draw-button" >Add <span class="codefont"> \draw</span> </button>
+                <button type="button" class="cmd-buttons" id="new-node-button" >Add <span class="codefont"> \node</span> </button>
+                <button type="button" class="redraw-button" id="redraw-button" >Redo Current Statement</button>
             </div>
-            <div id = "code-output">
+            <div class="codefont" id="code-output">
                 <p> \usetikzlibrary{hobby} %excellent drawing algorithm<br>
                     \begin{tikzpicture}<br>
-                        <span id = "coordinates"></span>
+                        <span id="coordinates"></span>
                     \end{tikzpicture}
                 </p>
             </div>

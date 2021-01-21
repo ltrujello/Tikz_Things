@@ -32,8 +32,8 @@ let circleAttrs = {
 };
 
 // Colors of the points on the canvas
-let colors = ["rgb(50, 149, 237)", "rgb(153, 102, 255)", "rgb(255, 51, 0)", "rgb(102, 255, 51)", 
-"rgb(0, 102, 153)", "rgb(0, 102, 153)", "rgb(255, 153, 51)", "rgb(0, 153, 0)", "rgb(51, 204, 255)"]
+let colors = ["rgb(50, 149, 237)", "rgb(50, 149, 237)", "rgb(153, 102, 255)", "rgb(255, 51, 0)", "rgb(102, 255, 51)", 
+"rgb(0, 102, 153)", "rgb(255, 153, 51)", "rgb(0, 153, 0)", "rgb(51, 204, 255)"]
 
 // Adds X-Axis as a 'g' element
 svg.append("g").attr({
@@ -53,91 +53,138 @@ let figures = { // "figures" maintains an object of arrays; each array is an (x,
     fig_0 : []
 };
 
-/* On Click, we register a point (which we call newData). Below we collect its data and draw it.
+let currCodeStatement = {
+    statementType : "", // E.g., "draw"
+    preamble : "",       // E.g., "\draw plot ..."
+    point : "",          // E.g., "... (x_1, y_1), (x_2, y_2)..."
+    end: ""              // E.g., "... };"
+}
+
+/* On Click, we register a point (newData). Below we collect its data and draw it.
 */
 svg.on("click", function() {    
-    // Extract data of clicked point
-    let coords = d3.mouse(this);
-    let newData= {
-        x: Math.round( xScale.invert(coords[0])),  // Takes the pixel number to convert to number
-        y: Math.round( yScale.invert(coords[1]))
-    };
-    
-    // Draw point on the canvas
-    points.push(newData);
-    figures["fig_"+ String(on_figure)].push(newData); // adds point to the new figure
-    svg.selectAll("circle") 
-    .data(points)
-    .enter()
-    .append("circle")
-    .attr(circleAttrs)
-    .attr({id: "c" + "-" + "fig_" + String(on_figure) + "-" + String(figures["fig_"+ String(on_figure)].length-1)})
-    .on("mouseover", handleMouseOver)
-    .on("mouseout", handleMouseOut); 
-    // };
+    if(currCodeStatement.preamble !== ""){
+        // Extract data of clicked point
+        let coords = d3.mouse(this);
+        let newData= {
+            x: Math.round( xScale.invert(coords[0])),  // Takes the pixel number to convert to number
+            y: Math.round( yScale.invert(coords[1]))
+        };
+
+        currCodeStatement.point = "(" + String(newData.x/10) + "," + String(newData.y/10) + ") ";
+        
+        // Draw point on the canvas
+        points.push(newData);
+        figures["fig_"+ String(on_figure)].push(newData); // adds point to the new figure
+        updateCodeStatement();
+        svg.selectAll("circle") 
+        .data(points)
+        .enter()
+        .append("circle")
+        .attr(circleAttrs)
+        .attr({id: "c" + "-" + "fig_" + String(on_figure) + "-" + String(figures["fig_"+ String(on_figure)].length-1)})
+        .on("mouseover", handleMouseOver)
+        .on("mouseout", handleMouseOut); 
+    }
 })
 
-/* On click for Add TikZ Object Button
+/* On click for New Draw Statement Button
 */
-document.getElementById("new-object-button").addEventListener("click", newObject_onClick);
+document.getElementById("new-draw-button").addEventListener("click", () => {createCodeStatement("draw")});
 
-function newObject_onClick () {
-    /* The user has finished adding points to their figure. We need to do three things:
-        1. Draw lines between their selected points.
-        2. Output the relevant TikZ command statements.
-        3. Set up empty arrays for the next figure's (x,y) data.
-    */
-    // 1. Draw lines between points.
-    current_fig = figures["fig_" + String(on_figure)]; 
-    console.log(current_fig);
-    for(let i = 0; i < current_fig.length; i++){ // Loop over (x,y) coordinates; connect a line from (x_i,y_i) to (x_{i+1}, y_{i+1}). 
-        if(i == current_fig.length-1){
-            svg.append('line')
-            .style("stroke", colors[on_figure])
-            .style("stroke-width", 1)
-            .attr("x1", xScale(current_fig[0].x))
-            .attr("y1", yScale(current_fig[0].y))
-            .attr("x2", xScale(current_fig[i].x))
-            .attr("y2", yScale(current_fig[i].y));             
-        }
-        else{
-            svg.append('line')
-            .style("stroke", colors[on_figure])
-            .style("stroke-width", 1)
-            .attr("x1", xScale(current_fig[i].x))
-            .attr("y1", yScale(current_fig[i].y))
-            .attr("x2", xScale(current_fig[i+1].x))
-            .attr("y2", yScale(current_fig[i+1].y)); 
+/* On click for New Node Statement Button
+*/
+document.getElementById("new-node-button").addEventListener("click", () => {createCodeStatement("node")});
+
+function createCodeStatement(statementType){
+    // First, we check if this is not the first figure the user has drawn.
+    if (on_figure != 0){
+        // We check if the user just finished drawing something. If so, we draw lines between their points.
+        if(currCodeStatement.statementType == "draw"){
+            // Draw lines between points.
+            current_fig = figures["fig_" + String(on_figure)]; 
+            console.log(current_fig);
+            for(let i = 0; i < current_fig.length; i++){ // Loop over (x,y) coordinates; connect a line from (x_i,y_i) to (x_{i+1}, y_{i+1}). 
+                if(i == current_fig.length-1){
+                    svg.append('line')
+                    .style("stroke", colors[on_figure])
+                    .style("stroke-width", 1)
+                    .attr("x1", xScale(current_fig[0].x))
+                    .attr("y1", yScale(current_fig[0].y))
+                    .attr("x2", xScale(current_fig[i].x))
+                    .attr("y2", yScale(current_fig[i].y));             
+                }
+                else{
+                    svg.append('line')
+                    .style("stroke", colors[on_figure])
+                    .style("stroke-width", 1)
+                    .attr("x1", xScale(current_fig[i].x))
+                    .attr("y1", yScale(current_fig[i].y))
+                    .attr("x2", xScale(current_fig[i+1].x))
+                    .attr("y2", yScale(current_fig[i+1].y)); 
+                }
+            }
         }
     }
-
-    //2. Output the relevant TikZ command statements.
-    let outputString = "\\draw plot[closed hobby] coordinates {<br>"; // The beginning of a figure's TikZ command 
-    current_fig.forEach((tuple) => { // We loop through a figure's set of points
-        let xCoord = String(tuple.x/10);
-        let yCoord = String(tuple.y/10);
-        outputString += "(" + xCoord + ", " + yCoord + ") ";
-    })
-    outputString += "};<br>";     
-    coordinates.innerHTML += outputString; // The overall eventual output for the user
-
-    // 3. Set up empty arrays for the next figure's (x,y) data.
-    on_figure += 1; // Increase this. We are now editing a new figure.
-    figures["fig_" + String(on_figure)] = []; // Initialize array which will contain new (x,y) coordinates.
+    // We update global variables now that we are on a different figure. 
+    on_figure += 1; // Very important. Let's all other functions know that, from now on, we're moving onto a different drawing 
+    figures["fig_" + String(on_figure)] = []; // Initialize array which will contain new incoming (x,y) coordinates.
     circleAttrs["fill"] = colors[on_figure]; // Give it a different color.
-};
+    
+    // Next, we work on setting up their new TikZ code.
+    // We create a new span element for the incoming TikZ code
+    let newTikZCode = document.createElement("span");
+
+    // We update currCodeStatement, and the span id, based on what type of statement the user wants.
+    if (statementType == "draw"){
+        currCodeStatement.statementType = "draw";
+        currCodeStatement.preamble = "\\draw plot[closed hobby] coordinates {<br>";
+        currCodeStatement.end = "};<br>";
+    }
+    else if (statementType == "node"){
+        currCodeStatement.statementType = "node";
+        currCodeStatement.preamble = "\\node at ";
+        currCodeStatement.end = "{};<br>";
+    }
+    // Edit TikZ code span tag
+    newTikZCode.id = "statement-fig_" + String(on_figure);
+    newTikZCode.innerHTML = currCodeStatement.preamble + currCodeStatement.end;
+    newTikZCode.style = "color:" + colors[on_figure];
+
+    // Add the new span element to HTML 
+    document.getElementById("coordinates").appendChild(newTikZCode);
+}
+
+function updateCodeStatement(){
+    /* We update the TikZ code output (because the user clicked a new point). 
+       We do this by 
+        1. Figuring out where in our string (coordinates.innerHTML) to add the new coordinate to the TikZ command
+        2. Add the new coordinate 
+        3. Update the TiKZ command
+    */
+    let current_id = "statement-fig_" + String(on_figure);
+    let n_Chars = document.getElementById(current_id).innerHTML.length; 
+    let n_endCodeChars = currCodeStatement.end.length;
+
+    let newStatement = document.getElementById(current_id).innerHTML.substring(0, n_Chars - n_endCodeChars); //We've figured out where to add our coordinate.
+    newStatement += currCodeStatement.point ; // Add the new coordinate 
+    newStatement += currCodeStatement.end;    // Add the end code, e.g., it could be "};"
+    document.getElementById(current_id).innerHTML = newStatement;     // Update the page with the new TikZ code
+}
 
 /* On click for Redraw Current Figure button
 */
 document.getElementById("redraw-button").addEventListener("click", redrawObject_onClick);
 
 function redrawObject_onClick () {
-    tuples = figures["fig_" + String(on_figure)];
+    let tuples = figures["fig_" + String(on_figure)];
     for(let i = 0; i < tuples.length; i++){
         d3.select("#c" + "-" + "fig_" + String(on_figure) + "-" + i).remove(); //remove the circles
         points.pop(); //remove the circle's data from "points"
     }
     figures["fig_" + String(on_figure)] = [];
+    document.getElementById("statement-fig_" + String(on_figure)).innerHTML = currCodeStatement.preamble + currCodeStatement.end;
+    
 }
 
 // This function is ridiculous 
