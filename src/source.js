@@ -32,8 +32,17 @@ let circleAttrs = {
 };
 
 // Colors of the points on the canvas
-let colors = ["rgb(50, 149, 237)", "rgb(50, 149, 237)", "rgb(153, 102, 255)", "rgb(255, 51, 0)", "rgb(102, 255, 51)", 
-"rgb(0, 102, 153)", "rgb(255, 153, 51)", "rgb(0, 153, 0)", "rgb(51, 204, 255)"]
+let colors = ["rgb(50, 149, 237)", 
+"rgb(51, 88, 255)",
+"rgb(172, 18, 255)", 
+"rgb(255, 0, 0)",
+"rgb(255, 144, 0)",
+"rgb(0, 196, 3)", 
+"rgb(51, 204, 255)",
+"rgb(0, 102, 153)",
+"rgb(255, 0, 238)",
+"rgb(50, 149, 237)", 
+]
 
 // Adds X-Axis as a 'g' element
 svg.append("g").attr({
@@ -103,7 +112,6 @@ function createCodeStatement(statementType){
         if(currCodeStatement.statementType == "draw"){
             // Draw lines between points.
             current_fig = figures["fig_" + String(on_figure)]; 
-            console.log(current_fig);
             for(let i = 0; i < current_fig.length; i++){ // Loop over (x,y) coordinates; connect a line from (x_i,y_i) to (x_{i+1}, y_{i+1}). 
                 if(i == current_fig.length-1){
                     svg.append('line')
