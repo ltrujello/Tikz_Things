@@ -4,10 +4,31 @@ body{
     font-size: 12px;
 }
 
+/* #body-wrapper{
+    background-color: black;
+} */
+
+.body-light{
+    background-color: white;
+}
+
+.body-dark{
+    background-color: black;
+}
+
 #text-heading{
     text-align: center;
     width: 100%;
     margin: 5px auto;
+    /* color: white;  */
+}
+
+.text-heading-light{
+    color: black;
+}
+
+.text-heading-dark{
+    color: white;
 }
 
 #description{
@@ -67,6 +88,20 @@ body{
     width: 70%;
 }
 
+#theme-selection{
+    display: flex;
+    float: right;
+    margin-right: 10%;
+    align-items: center;
+}
+
+.theme-selection-light{
+    color: black;
+}
+
+.theme-selection-dark{
+    color: white;
+}
 
 .axis path, .axis line {
     fill: none;

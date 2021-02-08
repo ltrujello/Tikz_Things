@@ -69,6 +69,26 @@ let currCodeStatement = {
     end: ""              // E.g., "... };"
 }
 
+let darkModeOn = false; // Initialize theme to be light mode
+
+document.getElementById("dark-mode-checkbox").addEventListener("click", changeColorTheme);
+
+function changeColorTheme(){
+    darkModeOn = !darkModeOn;
+    console.log(darkModeOn, "darkmode");
+    if (darkModeOn) {
+        // document.getElementById("body-wrapper").class = "body-dark";
+        document.getElementById("body-wrapper").setAttribute("class", "body-dark");
+        document.getElementById("theme-selection").setAttribute("class", "theme-selection-dark");
+        document.getElementById("text-heading").setAttribute("class", "text-heading-dark");
+    }
+    else {
+        document.getElementById("body-wrapper").setAttribute("class", "body-light");
+        document.getElementById("theme-selection").setAttribute("class", "theme-selection-light");
+        document.getElementById("text-heading").setAttribute("class", "text-heading-light");
+    }
+}
+
 /* On Click, we register a point (newData). Below we collect its data and draw it.
 */
 svg.on("click", function() {    
