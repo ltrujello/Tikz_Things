@@ -108,3 +108,13 @@ body{
     stroke: black;
     shape-rendering: crispEdges;  /* Round any decimal pixels so it'll render nicely */
 }
+
+.dark-axis path, .dark-axis line {
+    fill: none;
+    stroke: white;
+    shape-rendering: crispEdges;
+}
+
+.dark-axis text {
+    fill: white;
+}
