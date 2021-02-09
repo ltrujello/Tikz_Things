@@ -45,13 +45,13 @@ let colors = ["rgb(50, 149, 237)",
 ]
 
 // Adds X-Axis as a 'g' element
-svg.append("g").attr({
-    "class": "axis",  
+let svgxAxis = svg.append("g").attr({
+    "class": "axis",
     transform: "translate(" + [70, h - 280] + ")"  //[x, y] controls position 
 }).call(xAxis);  
 
 // Adds Y-Axis as a 'g' element
-svg.append("g").attr({
+let svgyAxis = svg.append("g").attr({
     "class": "axis",
     transform: "translate(" + [margin.left-20, -150] + ")"
 }).call(yAxis); 
@@ -68,6 +68,31 @@ let currCodeStatement = {
     point : "",          // E.g., "... (x_1, y_1), (x_2, y_2)..."
     end: ""              // E.g., "... };"
 }
+
+let darkModeOn = false; // Initialize theme to be light mode
+const changeColorTheme = () => {
+    darkModeOn = !darkModeOn;
+    console.log(darkModeOn, "darkmode");
+    if (darkModeOn) {
+        document.getElementById("body-wrapper").setAttribute("class", "body-dark");
+        document.getElementById("theme-selection").setAttribute("class", "theme-selection-dark");
+        document.getElementById("text-heading").setAttribute("class", "text-heading-dark");
+
+        svgxAxis.attr("class", "dark-axis");
+        svgyAxis.attr("class", "dark-axis");
+    }
+    else {
+        document.getElementById("body-wrapper").setAttribute("class", "body-light");
+        document.getElementById("theme-selection").setAttribute("class", "theme-selection-light");
+        document.getElementById("text-heading").setAttribute("class", "text-heading-light");
+
+        svgxAxis.attr("class", "axis");
+        svgyAxis.attr("class", "axis");
+    }
+}
+
+document.getElementById("dark-mode-checkbox").addEventListener("click", changeColorTheme);
+
 
 /* On Click, we register a point (newData). Below we collect its data and draw it.
 */
